@@ -28,7 +28,7 @@ pipeline {
 
         stage('Install & Run App') {
             steps {
-                sshagent(["${SSH_CRED}"]) {
+                sshagent(credentials: ["${SSH_CRED}"]) {
                     sh """
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${SERVER_IP} '
                             sudo apt update &&
