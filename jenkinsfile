@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SSH_CRED = 'node-app-key-deploy'
-        SERVER_IP = '13.217.11.24'
+        SERVER_IP = '172.31.43.30'
         REMOTE_USER = 'ubuntu'
         APP_DIR = '/home/ubuntu/pythonapp'
     }
