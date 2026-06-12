@@ -10,6 +10,8 @@ The project also includes GitHub Webhook integration to trigger automatic builds
 
 # Architecture
 
+![ubuntu](imgs/arch.png)
+
 GitHub Repository
 ↓
 GitHub Webhook
