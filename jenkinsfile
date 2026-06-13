@@ -9,42 +9,37 @@ pipeline {
     }
 
     stages {
-        stage('Clone Repo') {
-            steps {
-                git url: 'https://github.com/narwadesonali7/python-app-deployment-pipeline-jenkins.git', branch: 'main'
-            }
-        }
 
-        stage('Deploy to Server') {
+        stage('Deploy Files to Server') {
             steps {
                 sshagent(credentials: ["${SSH_CRED}"]) {
                     sh '''
                         ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${SERVER_IP} "mkdir -p ${APP_DIR}"
-                        scp -r Dockerfile README.md app.py requirements.txt test ${REMOTE_USER}@${SERVER_IP}:${APP_DIR}/
+
+                        scp -o StrictHostKeyChecking=no -r Dockerfile app.py requirements.txt README.md test \
+                        ${REMOTE_USER}@${SERVER_IP}:${APP_DIR}/
                     '''
                 }
             }
         }
 
-        stage('Install & Run App') {
+        stage('Build & Run Docker Container') {
             steps {
                 sshagent(credentials: ["${SSH_CRED}"]) {
-                    sh """
-                        ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${SERVER_IP} '
-                            sudo apt update &&
-                            sudo apt install -y python3-venv python3-pip &&
-                            cd ${APP_DIR} &&
-                            python3 -m venv venv &&
-                            source venv/bin/activate &&
-                            pip install --upgrade pip &&
-                            pip install -r requirements.txt &&
-                            nohup python3 app.py --host=0.0.0.0 > app.log 2>&1 &
-                            exit 0
-                        '
-                    """
+                    sh '''
+                        ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${SERVER_IP} "
+                            cd ${APP_DIR}
+
+                            sudo docker stop python-app || true
+                            sudo docker rm python-app || true
+
+                            sudo docker build -t python-app .
+
+                            sudo docker run -d --name python-app -p 5000:5000 python-app
+                        "
+                    '''
                 }
             }
         }
     }
 }
-
