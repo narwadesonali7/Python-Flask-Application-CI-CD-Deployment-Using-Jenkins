@@ -222,6 +222,7 @@ Just the push event
 Enable the webhook and click **Add Webhook**.
 
 ---
+![ubuntu](imgs/end.png)
 
 # CI/CD Workflow
 
