@@ -7,7 +7,7 @@ def hello_geek():
     return 'successfully deployed python application through jenkins!!!!!!!!!, added webhook From jenkins server from sonali'
 @app.route('/hi')
 def hell():
-    return '<h1>Hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii from Flask & Docker</h1>'
+    return '<h1>Hellooooooooo from Flask & Docker</h1>'
 
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
